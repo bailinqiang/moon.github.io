@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="https://bailinqiang.github.io/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
@@ -54,13 +54,49 @@
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://bailinqiang.github.io"></form>
       </div>
     </div>
   </div>
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-moon" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/04/moon/" class="article-date">
+  <time datetime="2019-03-04T06:41:32.000Z" itemprop="datePublished">2019-03-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/04/moon/">moon</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bailinqiang.github.io/2019/03/04/moon/" data-id="cjt2n4svb0003g4bh5ede10ja" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-hello" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -76,7 +112,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/04/hello/">hello</a>
+      <a class="article-title" href="/2019/03/04/hello/">服务端返回的对象中 双引号被转义成 &amp;quot的解决办法</a>
     </h1>
   
 
@@ -84,15 +120,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>我们都是好孩子</p>
-<h3 id="测试-markdorn"><a href="#测试-markdorn" class="headerlink" title="测试 markdorn"></a>测试 markdorn</h3><ul>
-<li>今天计划写一篇文章</li>
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在使用springmvc的时候  用@ResponseBody注解 直接返回对象，但是用ajax查询返回的结果中 引号都被转义了，可以确实是springmvc的处理，在返回的过程中给转义了。那么当时想到的解决办法：</p>
+<ul>
+<li>端上进行替换、网上有很多的解决办法是这样的，注意一点，js中要用正在表达式才能全部替换掉，replease只能替换第一个匹配到的</li>
+<li>服务端返回成JSON String  也就是 先将返回去的对象序列化成jsonstr返回，这样前端接收到的是可以正常解析的 </li>
+</ul>
+<h3 id="最终解决办法"><a href="#最终解决办法" class="headerlink" title="最终解决办法"></a>最终解决办法</h3><ul>
+<li>第一种方案 被排除了，因为在客户端发起的ajax调用，当时没有封装一个统一的出口，所以修改的地方会很多，这个大家在写前端项目的时候可以注意下，封装一个 方法，来统一处理ajax调用 比如 promise(url, data, successFun, failFun) 这种统一方法。</li>
+<li>第二种方案，1、简单一点 处理每个方法的返回值，但是这种办法很浪费时间，也不是咱程序员应该处理的，既然是springmvc项目，那么 对springmvc了解一些的同学应该知道，springmvc有统一的对返回值处理的地方，那既然这样的话，我首先去排查一下是哪个 HandlerMethodReturnValueHandler对 引号等进行的转义，<br>2、自己实现一个ReturnValueHandler去将返回对象转换成 JSONstr。<h4 id="找到转义的那个HandlerMethodReturnValueHandler"><a href="#找到转义的那个HandlerMethodReturnValueHandler" class="headerlink" title="找到转义的那个HandlerMethodReturnValueHandler"></a>找到转义的那个HandlerMethodReturnValueHandler</h4></li>
+<li><p>这个应该是比较简单的，我们可以从applicationContext中getBean(class)来获取到具体的values具体代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RequestMappingHandlerAdapter handlerAdapter = applicationContext.getBean(RequestMappingHandlerAdapter.class);</span><br><span class="line">List&lt;HandlerMethodReturnValueHandler&gt; handlers = <span class="keyword">new</span> ArrayList&lt;HandlerMethodReturnValueHandler&gt;();</span><br><span class="line">List&lt;HandlerMethodReturnValueHandler&gt; returnValueHandlers = handlerAdapter.getReturnValueHandlers();</span><br></pre></td></tr></table></figure>
+<p>获取到的大概有一下几个:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ReturnValueHandler  -- 自定义的</span><br><span class="line">ModelAndViewMethodReturnValueHandler</span><br><span class="line">ModelMethodProcessor</span><br><span class="line">ViewMethodReturnValueHandler</span><br><span class="line">ResponseBodyEmitterReturnValueHandler</span><br><span class="line">StreamingResponseBodyReturnValueHandler</span><br><span class="line">HttpEntityMethodProcessor</span><br><span class="line">HttpHeadersReturnValueHandler</span><br><span class="line">CallableMethodReturnValueHandler</span><br><span class="line">DeferredResultMethodReturnValueHandler</span><br><span class="line">AsyncTaskMethodReturnValueHandler</span><br><span class="line">ModelAttributeMethodProcessor</span><br><span class="line">XssRequestResponseBodyMethodProcessor</span><br><span class="line">ViewNameMethodReturnValueHandler</span><br><span class="line">MapMethodProcessor</span><br><span class="line">ModelAttributeMethodProcessor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>看下springmvc是如何定位具体使用哪个returnHandler的  代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HandlerMethodReturnValueHandlerComposite</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleReturnValue</span><span class="params">(Object returnValue, MethodParameter returnType,</span></span></span><br><span class="line"><span class="function"><span class="params">			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);</span><br><span class="line">    <span class="keyword">if</span> (handler == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Unknown return value type: "</span> + returnType.getParameterType().getName());</span><br><span class="line">    &#125;</span><br><span class="line">    handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 核心在 selectHandler  方法中</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> HandlerMethodReturnValueHandler <span class="title">selectHandler</span><span class="params">(Object value, MethodParameter returnType)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> isAsyncValue = isAsyncReturnValue(value, returnType);</span><br><span class="line">    <span class="keyword">for</span> (HandlerMethodReturnValueHandler handler : <span class="keyword">this</span>.returnValueHandlers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isAsyncValue &amp;&amp; !(handler <span class="keyword">instanceof</span> AsyncHandlerMethodReturnValueHandler)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (handler.supportsReturnType(returnType)) &#123;</span><br><span class="line">            <span class="keyword">return</span> handler;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*** 可以看出根据 supportReturnType来决定使用哪个handler的，那么我们可以在自定义的returnHandler中 </span></span><br><span class="line"><span class="comment">    重写supportReturnType方法，来支持我们需要处理的那些方法，例如 含有<span class="doctag">@ResponseBody</span>的方法 笔者代码如下：</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsReturnType</span><span class="params">(MethodParameter returnType)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> returnType.getMethodAnnotation(ResponseBody.class) != <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 因为笔者项目全部都是 异步调用返回对象而非 ModelAndView 或者View，所以这么写。</span></span><br></pre></td></tr></table></figure></li>
+<li>确定handler后 接下来就简单了，只需要在handlerReturnValue中，将Object对象 转换成JSONStr  然后 response.write出去即可 ，笔者代码如下<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleReturnValue</span><span class="params">(Object o, MethodParameter methodParameter, ModelAndViewContainer mavContainer, NativeWebRequest nativeWebRequest)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);</span><br><span class="line">    String result = JSON.toJSONString(o);</span><br><span class="line">    mavContainer.setRequestHandled(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (o <span class="keyword">instanceof</span> OpenWorkbenchResult || o <span class="keyword">instanceof</span> ApiResult) &#123;</span><br><span class="line">        result = result.replace(<span class="string">"\t"</span>, <span class="string">""</span>);</span><br><span class="line">        result = result.replace(<span class="string">"\n"</span>, <span class="string">""</span>);</span><br><span class="line">        result = result.replace(<span class="string">"\r"</span>, <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    response.setContentType(<span class="string">"application/json;charset=UTF-8"</span>);</span><br><span class="line">    response.setHeader(<span class="string">"Pragma"</span>, <span class="string">"No-cache"</span>);</span><br><span class="line">    response.setHeader(<span class="string">"Cache-Control"</span>, <span class="string">"no-cache"</span>);</span><br><span class="line">    response.setDateHeader(<span class="string">"Expires"</span>, <span class="number">0</span>);</span><br><span class="line">    response.getWriter().write(result);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment">    if 条件里的 大家尽可以不管，这个是因为笔者项目中  前端json解析服务端返回字段，遇到非法json字符报错，</span></span><br><span class="line"><span class="comment">    所以在这里统一做了处理，如果大家返回json中都是标准的，那么这一步可以不做。</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/04/hello/" data-id="cjstz752j0002ikbh7b31g38l" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjt2n4sv30000g4bh9v9gwdu6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -137,7 +187,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/04/hello-world/" data-id="cjstz752d0000ikbht9184xpn" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello-world/" data-id="cjt2n4sv90002g4bhaq70npgz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -178,7 +228,11 @@
       <ul>
         
           <li>
-            <a href="/2019/03/04/hello/">hello</a>
+            <a href="/2019/03/04/moon/">moon</a>
+          </li>
+        
+          <li>
+            <a href="/2019/03/04/hello/">服务端返回的对象中 双引号被转义成 &amp;quot的解决办法</a>
           </li>
         
           <li>
