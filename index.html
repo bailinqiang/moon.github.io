@@ -84,7 +84,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="泛型集合获取值时报强转错误"><a href="#泛型集合获取值时报强转错误" class="headerlink" title="泛型集合获取值时报强转错误"></a>泛型集合获取值时报强转错误</h3><h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><ul>
+        <h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><ul>
 <li>简单代码如下<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException, InvocationTargetException, IllegalAccessException </span>&#123;</span><br><span class="line">    List&lt;String&gt; aa = getNames();</span><br><span class="line">    System.out.println(aa);</span><br><span class="line">    <span class="keyword">for</span> (String s : aa) &#123;</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 先不管getNames的 具体实现，可以当成是rpc调用返回结果</span></span><br><span class="line"><span class="comment">// 或者 List&lt;String&gt; 作为rpc调用的参数。无需关心对方是如何设置这个值的</span></span><br></pre></td></tr></table></figure></li>
 <li><p>报错信息</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>]   <span class="comment">// 这个是第一行打印  可以正确的展示出来，并行显示的类型不是String</span></span><br><span class="line">Exception in thread <span class="string">"main"</span> java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String</span><br><span class="line">	at com.moon.switchExplore.ListGenericForBlog.main(ListGenericForBlog.java:<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
@@ -92,7 +92,7 @@
 <li><p>那么问题来了 1、为啥 List&lt;String> 可以存放 Integer 呢  2、List&lt;String> 是如何 add(Integer) 的呢 3、强转发生在什么时候?</p>
 </li>
 </ul>
-<h4 id="接下来一个一个来探索"><a href="#接下来一个一个来探索" class="headerlink" title="接下来一个一个来探索"></a>接下来一个一个来探索</h4><ul>
+<h3 id="接下来一个一个来探索"><a href="#接下来一个一个来探索" class="headerlink" title="接下来一个一个来探索"></a>接下来一个一个来探索</h3><ul>
 <li>泛型的作用范围， 一句话 泛型只在编译阶段有效。在运行期会被擦除  那么就可以解释 List&lt;String> 存放Integer的值了，<br>因为只在编译阶段有效。只要通过编译即可。或者骗一骗编译器。接下来是第二个问题 List&lt;String> 怎么add Integer</li>
 <li>骗过泛型</li>
 </ul>
@@ -110,7 +110,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/18/classCastExceptionInGeneric/" data-id="cjtdz0cmg0001e6bh4mtlm16e" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/18/classCastExceptionInGeneric/" data-id="cjtdz0tod0001fubhxz49cmpn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -164,7 +164,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjtdz0cmb0000e6bhjl9ja6qs" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjtdz0to80000fubhy58umojq" class="article-share-link">Share</a>
       
       
     </footer>
