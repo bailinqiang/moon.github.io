@@ -62,10 +62,10 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-moon" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-classCastExceptionInGeneric" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/04/moon/" class="article-date">
-  <time datetime="2019-03-04T06:41:32.000Z" itemprop="datePublished">2019-03-04</time>
+    <a href="/2019/03/18/classCastExceptionInGeneric/" class="article-date">
+  <time datetime="2019-03-18T05:50:20.000Z" itemprop="datePublished">2019-03-18</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/04/moon/">moon</a>
+      <a class="article-title" href="/2019/03/18/classCastExceptionInGeneric/">classCastExceptionInGeneric</a>
     </h1>
   
 
@@ -84,11 +84,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="泛型集合获取值时报强转错误"><a href="#泛型集合获取值时报强转错误" class="headerlink" title="泛型集合获取值时报强转错误"></a>泛型集合获取值时报强转错误</h3><h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><ul>
+<li>简单代码如下<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException, InvocationTargetException, IllegalAccessException </span>&#123;</span><br><span class="line">    List&lt;String&gt; aa = getNames();</span><br><span class="line">    System.out.println(aa);</span><br><span class="line">    <span class="keyword">for</span> (String s : aa) &#123;</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 先不管getNames的 具体实现，可以当成是rpc调用返回结果</span></span><br><span class="line"><span class="comment">// 或者 List&lt;String&gt; 作为rpc调用的参数。无需关心对方是如何设置这个值的</span></span><br></pre></td></tr></table></figure></li>
+<li><p>报错信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>]   <span class="comment">// 这个是第一行打印  可以正确的展示出来，并行显示的类型不是String</span></span><br><span class="line">Exception in thread <span class="string">"main"</span> java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String</span><br><span class="line">	at com.moon.switchExplore.ListGenericForBlog.main(ListGenericForBlog.java:<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>那么问题来了 1、为啥 List&lt;String> 可以存放 Integer 呢  2、List&lt;String> 是如何 add(Integer) 的呢 3、强转发生在什么时候?</p>
+</li>
+</ul>
+<h4 id="接下来一个一个来探索"><a href="#接下来一个一个来探索" class="headerlink" title="接下来一个一个来探索"></a>接下来一个一个来探索</h4><ul>
+<li>泛型的作用范围， 一句话 泛型只在编译阶段有效。在运行期会被擦除  那么就可以解释 List&lt;String> 存放Integer的值了，<br>因为只在编译阶段有效。只要通过编译即可。或者骗一骗编译器。接下来是第二个问题 List&lt;String> 怎么add Integer</li>
+<li>骗过泛型</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; aa = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">aa.add(<span class="number">1</span>);  <span class="comment">// 这么写 编辑器是会报错的，并行编译阶段会报错 javac时  会报参数不匹配</span></span><br><span class="line"><span class="comment">// 那怎么绕过检查呢  其实就是反射调用  例子</span></span><br><span class="line"></span><br><span class="line">Method method = aa.getClass().getDeclaredMethod(<span class="string">"add"</span>, Object.class);</span><br><span class="line">method.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">method.invoke(aa, <span class="number">1</span>);</span><br><span class="line">method.invoke(aa, <span class="number">2</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 这里有一点值得注意下  getDeclaredMethod 的时候 第二个参数要填，必须填Object.class 这是为什么呢 ？ 我们看下 字节码中 List.add方法</span></span><br><span class="line"><span class="comment">* 可以找到下面这句  能够直观的看出来 在运行期  add 方法接受的参数是 Object 所以  反射调用的必须是Object.class</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">InterfaceMethodref #34.#35        // java/util/List.add:(Ljava/lang/Object;)Z</span><br></pre></td></tr></table></figure>
+<ul>
+<li>强转什么时候发生<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">33: checkcast     #8                  // class java/lang/String</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>查看字节码发现 checkcast这个指令 这个指令去执行类型转换，结果Integer抓换String  不符合jvm规范 所以报错了  </p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li>查看字节码  javap -v (javac 编译后的 class 文件)</li>
+<li><a href="http://mbravenboer.blogspot.com/2008/12/why-jvm-spec-defines-checkcast-for.html" target="_blank" rel="noopener">jvm 关于checkcast指令的规定</a></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/04/moon/" data-id="cjt2ngp4f00021obhhst56ywp" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/18/classCastExceptionInGeneric/" data-id="cjtdyxm1b00008rbhj1ba6dbn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -142,7 +164,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjt2ngp4c00011obh6c87rl9w" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjtdyxm1g00028rbh4f8s96te" class="article-share-link">Share</a>
       
       
     </footer>
@@ -187,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/04/hello-world/" data-id="cjt2ngp4800001obhkekmm0h7" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello-world/" data-id="cjtdyxm1f00018rbh9rxtlwyk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -228,7 +250,7 @@
       <ul>
         
           <li>
-            <a href="/2019/03/04/moon/">moon</a>
+            <a href="/2019/03/18/classCastExceptionInGeneric/">classCastExceptionInGeneric</a>
           </li>
         
           <li>
