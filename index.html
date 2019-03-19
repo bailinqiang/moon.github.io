@@ -62,6 +62,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-load" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/load/" class="article-date">
+  <time datetime="2019-03-19T03:12:40.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/load/">关于系统的负载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢"><a href="#经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢" class="headerlink" title="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢"></a>经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢</h4><p>常见的电脑卡 ： 内存满了开始与磁盘进行内存交换、cpu 使用率满了、磁盘io满了等这些硬件指标达到一定数量<br>今天我们来说一说系统的负载。<br>查询内存、cpu、io等 有很多命令可以看 其中最简单、直白的莫过于top了</p>
+<ul>
+<li>我们所说的系统负载很高是什么意思呢，我们来看下什么是负载、怎么查看、多少负载合适</li>
+<li><p>首先负载的意思，对于一个系统 负载是 总的进程数量  /   单位时间内系统可以处理的进程数量<br>举个例子，经典的例子：车要过桥，假设只有一条桥(对应单核系统) ,单位时间内可以通行10辆车，那么 当没有车通行时  0 / 10 = 0,load为0<br>当有5辆车通行时，5/10 = 0.5,当有10辆时 ，这时候系统的负载为1 也就是100%了(单核系统)。那么当再来多的车，需要排队等待了，所以这时候系统可能就会有点卡(如果都是计算的进行，那么cpu会很满，如果是io进程，对于cpu来说压力就小很多)。如果来100辆车，那么可想而知，桥外面就得等待90辆，负载达到10 已经很高了，需要排查问题。<br>上面的例子都是单核的，那么对于多核系统，负载只反映在单核上，怎么理解呢，比如100辆车，假如 有10座桥，那么是不是没有等待的？负载按道理说应该是1呢，其实不然 这个负载还是10。(我也不知道为什么，反正就是这么定义的)。这个时候的load:10 和单核时候的load:10差距就很大了，所以观察load数字需要结合具体的核数（linux 系统查看核数: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/cpuinfo | grep &apos;cpu cores&apos;</span><br><span class="line">cpu cores : 4</span><br><span class="line">-- 或者</span><br><span class="line">top  (然后按  1 )</span><br><span class="line">%Cpu0  :  0.0 us,  0.3 sy,  0.0 ni, 91.4 id,  0.0 wa,  0.0 hi,  0.0 si,  8.3 st</span><br><span class="line">%Cpu1  :  0.3 us,  0.3 sy,  0.0 ni, 97.0 id,  0.0 wa,  0.0 hi,  0.0 si,  2.3 st</span><br><span class="line">%Cpu2  :  0.0 us,  0.3 sy,  0.3 ni, 96.3 id,  0.0 wa,  0.0 hi,  0.0 si,  3.0 st</span><br><span class="line">%Cpu3  :  0.0 us,  0.0 sy,  0.0 ni, 93.6 id,  0.0 wa,  0.0 hi,  0.0 si,  6.4 st</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如何查看系统负载<br>介绍几个命令<br>1、top<br>2、w<br>3、uptime<br>4、cat /proc/loadavg<br>等  这些只要一个就够了 load会print三个指数 我电脑:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">w</span><br><span class="line">11:11  up 4 days, 19:05, 2 users, load averages: 1.93 2.16 2.37</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>load averages 依次表示的是 1分钟  5  分钟 15分钟内的负载，顾名思义 都是平均值。如果1分钟比较大，但是5、15分钟内都很正常，那么其实可以不用管很担心。</p>
+<ul>
+<li>负载多少是正常<br>业界觉得单核负责在0.7是正常的， 那么对于笔者4核系统的负载多少合适？  答： 0.7 * 4 = 2.8 只要小于2.8 那么系统就嗖嗖的(当然其他指标正常的情况下)</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://scoutapp.com/blog/understanding-load-averages" target="_blank" rel="noopener">Understanding Linux CPU Load - when should you be worried?</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://bailinqiang.github.io/2019/03/19/load/" data-id="cjtf85wmw0001sgbh6xh9p0oy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-classCastExceptionInGeneric" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/03/18/classCastExceptionInGeneric/" class="article-date">
@@ -110,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/18/classCastExceptionInGeneric/" data-id="cjtdz0tod0001fubhxz49cmpn" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/18/classCastExceptionInGeneric/" data-id="cjtf85wms0000sgbhdamt1dd6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -164,7 +217,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjtdz0to80000fubhy58umojq" class="article-share-link">Share</a>
+      <a data-url="https://bailinqiang.github.io/2019/03/04/hello/" data-id="cjtf85wmy0002sgbhgform2ob" class="article-share-link">Share</a>
       
       
     </footer>
@@ -203,6 +256,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/03/19/load/">关于系统的负载</a>
+          </li>
         
           <li>
             <a href="/2019/03/18/classCastExceptionInGeneric/">泛型集合获取值时报强转错误</a>
