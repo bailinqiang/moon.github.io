@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="java, 程序员, 并发, 并行">
+  <meta name="keywords" content="java,">
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢常见的电脑卡 ： 内存满了开始与磁盘进行内存交换、cpu 使用率满了、磁盘io满了等这些硬件指标达到一定数量今天我们来说一说系统的负载。查询内存、cpu、io等 有很多命令可以看 其中最简单、直白的莫过于top了我们所说的系统负载很高是什么意思呢，我们来看下什么是负载、怎么查看、多少负载合适  首先负载的意思，对于一个系统 负载是 总的进程">
+<meta name="description" content="随着现在jvm的改进，为了加速在指令上都有一些优化，话不多说 直接看例子123456789101112131415161718192021222324static boolean status = false;static int number = 0;public static void main(String[] args) &amp;#123;    new Thread()&amp;#123;">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于系统的负载">
-<meta property="og:url" content="https://bailinqiang.github.io/2019/03/19/load/index.html">
+<meta property="og:title" content="java编译器优化指令执行顺序">
+<meta property="og:url" content="https://bailinqiang.github.io/2019/04/05/java编译器优化指令执行顺序/index.html">
 <meta property="og:site_name" content="A simple man">
-<meta property="og:description" content="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢常见的电脑卡 ： 内存满了开始与磁盘进行内存交换、cpu 使用率满了、磁盘io满了等这些硬件指标达到一定数量今天我们来说一说系统的负载。查询内存、cpu、io等 有很多命令可以看 其中最简单、直白的莫过于top了我们所说的系统负载很高是什么意思呢，我们来看下什么是负载、怎么查看、多少负载合适  首先负载的意思，对于一个系统 负载是 总的进程">
+<meta property="og:description" content="随着现在jvm的改进，为了加速在指令上都有一些优化，话不多说 直接看例子123456789101112131415161718192021222324static boolean status = false;static int number = 0;public static void main(String[] args) &amp;#123;    new Thread()&amp;#123;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-21T02:47:48.304Z">
+<meta property="og:updated_time" content="2019-04-05T14:14:30.992Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于系统的负载">
-<meta name="twitter:description" content="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢常见的电脑卡 ： 内存满了开始与磁盘进行内存交换、cpu 使用率满了、磁盘io满了等这些硬件指标达到一定数量今天我们来说一说系统的负载。查询内存、cpu、io等 有很多命令可以看 其中最简单、直白的莫过于top了我们所说的系统负载很高是什么意思呢，我们来看下什么是负载、怎么查看、多少负载合适  首先负载的意思，对于一个系统 负载是 总的进程">
+<meta name="twitter:title" content="java编译器优化指令执行顺序">
+<meta name="twitter:description" content="随着现在jvm的改进，为了加速在指令上都有一些优化，话不多说 直接看例子123456789101112131415161718192021222324static boolean status = false;static int number = 0;public static void main(String[] args) &amp;#123;    new Thread()&amp;#123;">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://bailinqiang.github.io/2019/03/19/load/">
+  <link rel="canonical" href="https://bailinqiang.github.io/2019/04/05/java编译器优化指令执行顺序/">
 
 
 
 
 
-  <title>关于系统的负载 | A simple man</title>
+  <title>java编译器优化指令执行顺序 | A simple man</title>
   
 
 
@@ -242,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://bailinqiang.github.io/2019/03/19/load/">
+    <link itemprop="mainEntityOfPage" href="https://bailinqiang.github.io/2019/04/05/java编译器优化指令执行顺序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="白林强">
@@ -259,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">关于系统的负载</h1>
+          <h1 class="post-title" itemprop="name headline">java编译器优化指令执行顺序</h1>
         
 
         <div class="post-meta">
@@ -271,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-19T11:12:40+08:00">
-                2019-03-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-05T21:44:11+08:00">
+                2019-04-05
               </time>
             
 
@@ -281,39 +282,6 @@
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/load分析/" itemprop="url" rel="index">
-                    <span itemprop="name">load分析</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -342,22 +310,7 @@
       
 
       
-        <h3 id="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢"><a href="#经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢" class="headerlink" title="经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢"></a>经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢</h3><p>常见的电脑卡 ： 内存满了开始与磁盘进行内存交换、cpu 使用率满了、磁盘io满了等这些硬件指标达到一定数量<br>今天我们来说一说系统的负载。<br>查询内存、cpu、io等 有很多命令可以看 其中最简单、直白的莫过于top了<br>我们所说的系统负载很高是什么意思呢，我们来看下什么是负载、怎么查看、多少负载合适</p>
-<ul>
-<li><p>首先负载的意思，对于一个系统 负载是 总的进程数量  /   单位时间内系统可以处理的进程数量<br>举个例子，经典的例子：车要过桥，假设只有一条桥(对应单核系统) ,单位时间内可以通行10辆车，那么 当没有车通行时  0 / 10 = 0,load为0<br>当有5辆车通行时，5/10 = 0.5,当有10辆时 ，这时候系统的负载为1 也就是100%了(单核系统)。那么当再来多的车，需要排队等待了，所以这时候系统可能就会有点卡(如果都是计算的进行，那么cpu会很满，如果是io进程，对于cpu来说压力就小很多)。如果来100辆车，那么可想而知，桥外面就得等待90辆，负载达到10 已经很高了，需要排查问题。<br>上面的例子都是单核的，那么对于多核系统，负载只反映在单核上，怎么理解呢，比如100辆车，假如 有10座桥，那么是不是没有等待的？负载按道理说应该是1呢，其实不然 这个负载还是10。(我也不知道为什么，反正就是这么定义的)。这个时候的load:10 和单核时候的load:10差距就很大了，所以观察load数字需要结合具体的核数（linux 系统查看核数: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/cpuinfo | grep &apos;cpu cores&apos;</span><br><span class="line">cpu cores : 4</span><br><span class="line">-- 或者</span><br><span class="line">top  (然后按  1 )</span><br><span class="line">%Cpu0  :  0.0 us,  0.3 sy,  0.0 ni, 91.4 id,  0.0 wa,  0.0 hi,  0.0 si,  8.3 st</span><br><span class="line">%Cpu1  :  0.3 us,  0.3 sy,  0.0 ni, 97.0 id,  0.0 wa,  0.0 hi,  0.0 si,  2.3 st</span><br><span class="line">%Cpu2  :  0.0 us,  0.3 sy,  0.3 ni, 96.3 id,  0.0 wa,  0.0 hi,  0.0 si,  3.0 st</span><br><span class="line">%Cpu3  :  0.0 us,  0.0 sy,  0.0 ni, 93.6 id,  0.0 wa,  0.0 hi,  0.0 si,  6.4 st</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如何查看系统负载<br>介绍几个命令<br>1、top<br>2、w<br>3、uptime<br>4、cat /proc/loadavg<br>等  这些只要一个就够了 load会print三个指数 我电脑:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">w</span><br><span class="line">11:11  up 4 days, 19:05, 2 users, load averages: 1.93 2.16 2.37</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>load averages 依次表示的是 1分钟  5  分钟 15分钟内的负载，顾名思义 都是平均值。如果1分钟比较大，但是5、15分钟内都很正常，那么其实可以不用管很担心。</p>
-<ul>
-<li>负载多少是正常<br>业界觉得单核负责在0.7是正常的， 那么对于笔者4核系统的负载多少合适？  答： 0.7 * 4 = 2.8 只要小于2.8 那么系统就嗖嗖的(当然其他指标正常的情况下)</li>
-</ul>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li><a href="https://scoutapp.com/blog/understanding-load-averages" target="_blank" rel="noopener">Understanding Linux CPU Load - when should you be worried?</a></li>
-</ul>
+        <p>随着现在jvm的改进，为了加速在指令上都有一些优化，话不多说 直接看例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">boolean</span> status = <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> number = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                number = <span class="number">100</span>;</span><br><span class="line">                status = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (status) &#123;</span><br><span class="line">                System.out.println(<span class="string">"status is true number is "</span>+ number);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">"number is "</span> + number);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>这段代码，我们咋一看 由于线程start时机不受我们程序控制。那么可能限制性 第一个线程，可能先执行第二个线程，或者两个一起执行。<br>先不管这个，反正根据竞态条件，第一感觉有两种print:  1、status is true number is 100;<br>2、number is false;<br>3、numbr is 100;<br>那么问题来了，实际执行过程中会存在第四种情况 4、status is true  number is false;<br>这是为什么呢，其实是jvm判断第一个线程执行的时候，根据语义 指令number = 100 和指令status = true  不存在before and happend关系，就可以进行指令的重排序，<br>那么 就会出现 可能线程1 先执行status = true,在执行number = 100,但是在这两个指令过程中间，线程2执行了，所以会出现第四中情况。<br>结果请看代码 (比较是比较不常见现象，所以多试几次才会出现，当然代码写的low一些，不过道理是这么个道理)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2000</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 每次 main函数初始化，，当然最好的做法是用原子 操作。final</span></span><br><span class="line">        status = <span class="keyword">false</span>;</span><br><span class="line">        number = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                number = <span class="number">100</span>;</span><br><span class="line">                status = <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (status) &#123;</span><br><span class="line">                    System.out.println(<span class="string">"status is true number is "</span>+ number);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">"number is "</span> + number);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">        <span class="comment">// 休息2ms  保证下次循环不会修改本次的结果</span></span><br><span class="line">        Thread.sleep(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -373,6 +326,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
 
       
       
@@ -382,8 +341,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/18/classCastExceptionInGeneric/" rel="next" title="泛型集合获取值时报强转错误">
-                <i class="fa fa-chevron-left"></i> 泛型集合获取值时报强转错误
+              <a href="/2019/03/21/linux-内存/" rel="next" title="linux-内存">
+                <i class="fa fa-chevron-left"></i> linux-内存
               </a>
             
           </div>
@@ -391,10 +350,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/20/茶馆/" rel="prev" title="茶馆读后感">
-                茶馆读后感 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -451,17 +406,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -523,22 +469,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢"><span class="nav-number">1.</span> <span class="nav-text">经常听说系统挂了，电脑卡了，那么具体的指标体现在什么地方呢</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
