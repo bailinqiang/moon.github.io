@@ -313,7 +313,7 @@
       
         
           
-            <h4 id="褚霸大神的图"><a href="#褚霸大神的图" class="headerlink" title="褚霸大神的图."></a><a href="http://blog.yufeng.info/archives/2456/free-3?spm=ata.13261165.0.0.13586dd6mT1x9q" target="_blank" rel="noopener">褚霸大神的图</a>.</h4><p>内存的去向主要有3个：1. 进程消耗。 2. slab消耗 3.pagetable消耗。</p>
+            <h4 id="褚霸大神的图"><a href="#褚霸大神的图" class="headerlink" title="褚霸大神的图"></a><a href="http://blog.yufeng.info/archives/2456/free-3?spm=ata.13261165.0.0.13586dd6mT1x9q" target="_blank" rel="noopener">褚霸大神的图</a></h4><p>内存的去向主要有3个：1、<strong>进程消耗</strong>。 2、<strong>slab消耗</strong> 3、<strong>pagetable消耗</strong>。</p>
 <h4 id="进程消耗"><a href="#进程消耗" class="headerlink" title="进程消耗"></a>进程消耗</h4><p>通过top命令看到的res就是用户进程的消耗<br><img src="/2019/12/24/内存计算/res.png" title="res截图"></p>
 <h4 id="slab消耗"><a href="#slab消耗" class="headerlink" title="slab消耗"></a>slab消耗</h4><p>简单的说内核为了高性能每个需要重复使用的对象都会有个池，这个slab池会cache大量常用的对象，所以会消耗大量的内存。通过 slabtop来查看具体使用情况。</p>
 <h4 id="pagetable消耗"><a href="#pagetable消耗" class="headerlink" title="pagetable消耗"></a>pagetable消耗</h4><p>管理这些物理页面的硬开销</p>
@@ -1554,6 +1554,11 @@
 
 
           
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
 
         </div>
         
@@ -1806,6 +1811,8 @@
 
 
   
+
+
 
 
 
