@@ -313,7 +313,8 @@
       
         
           
-            <h4 id="褚霸大神的图"><a href="#褚霸大神的图" class="headerlink" title="褚霸大神的图"></a><a href="http://blog.yufeng.info/archives/2456/free-3?spm=ata.13261165.0.0.13586dd6mT1x9q" target="_blank" rel="noopener">褚霸大神的图</a></h4><p>内存的去向主要有3个：1、<strong>进程消耗</strong>。 2、<strong>slab消耗</strong> 3、<strong>pagetable消耗</strong>。</p>
+            <h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>借鉴霸爷的图<br><img src="/2019/12/24/内存计算/memory.jpg" title="内存截图"></p>
+<p>其中内存使用的去向主要有3个：1、<strong>进程消耗</strong>。 2、<strong>slab消耗</strong> 3、<strong>pagetable消耗</strong>。</p>
 <h4 id="进程消耗"><a href="#进程消耗" class="headerlink" title="进程消耗"></a>进程消耗</h4><p>通过top命令看到的res就是用户进程的消耗<br><img src="/2019/12/24/内存计算/res.png" title="res截图"></p>
 <h4 id="slab消耗"><a href="#slab消耗" class="headerlink" title="slab消耗"></a>slab消耗</h4><p>简单的说内核为了高性能每个需要重复使用的对象都会有个池，这个slab池会cache大量常用的对象，所以会消耗大量的内存。通过 slabtop来查看具体使用情况。</p>
 <h4 id="pagetable消耗"><a href="#pagetable消耗" class="headerlink" title="pagetable消耗"></a>pagetable消耗</h4><p>管理这些物理页面的硬开销</p>
@@ -439,151 +440,9 @@
             <p>在开发过程中我们qps比较高的场景，难免会使用到缓存，以便减少db的压力。缓存使用比较多的话有redis等缓存。可以作为分布式缓存。<br>但是redis等缓存， 还是会走网络传输(只不过缓存服务器有优化，比如是基于内存的)，大概也需要1ms左右，那么有些场景加速或者减少缓存服务器压力<br>会使用本地缓存，例如自己实现的map、google 的guava等。这些会在机器本地进行缓存，加速数据的获取、减少缓存服务器的压力。<br>我们项目的数据获取架构是 localCacheLoader –&gt; RedisCacheLoader  –&gt; dbLoader。 localCache用的是com.google.common.cache.Cache类。<br>在项目中发现一个问题，localCacheLoader 代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Object&gt; result = localCacheLoader.get(cacheKey, () -&gt; &#123;</span><br><span class="line">                    List&lt;Object&gt; list = origin.load();</span><br><span class="line">                    return list == null? Collections.emptyList():list;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure></p>
 <p>然后发现一个问题 result 和  origin.load()获取的值不一致！。问题的表现就是，本地缓存create的值和load出来的值不同。<br>因为之前用redis或者db加载数据，并发下，返回的都是值(也就是说不是同一个引用)。我以为google的本地缓存设计和redis一样，但是没有考虑到它返回的确实是<br>引用。result可以在其他地方被修改，修改的也是引用，也就是localCache中的值被修改了。下一个线程取值的时候就会取到不正确的(不是create时的值，没有显式的put)。</p>
 <p>总结： 在使用本地缓存load数据的时候，要修改值需要谨慎，或者显式的更新本地缓存。不然会存在上诉提到的问题。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://bailinqiang.github.io/2019/05/13/链表/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="白林强">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="A simple man">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/13/链表/" itemprop="url">链表</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-13T11:05:31+08:00">
-                2019-05-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/面试题-链表/" itemprop="url" rel="index">
-                    <span itemprop="name">面试题 链表</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>java中的列表常见的：LinkedList 是一个双向链表，结构如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span></span>&#123;</span><br><span class="line">    Node&lt;E&gt; first;</span><br><span class="line">    Node&lt;E&gt; last;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">        E item;</span><br><span class="line">        Node&lt;E&gt; next;</span><br><span class="line">        Node&lt;E&gt; prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>就这么简单的结构，单双体现在Node节点上，双向的Node可以向前和向后，也就是有 next和prev操作，对于列表来说，只需要告诉头尾即可。<br>面试题：怎么判断两个单向链表有没有相交、是否有交点、是否成环：</p>
-<ul>
-<li><a href="https://blog.csdn.net/fengxinlinux/article/details/78885764" target="_blank" rel="noopener">转载答案</a></li>
-</ul>
+<hr>
+<p>更新于20191231<br>之前排查过一次本地缓存更改写脏数据的问题。最近我们线上又出现一次问题，重启后就正常，运行一段时间数据就脏了。和guava的过期时间对比，不是guava缓存导致的，因为一旦数据脏了就不会变成正常的(对于guava一般都会过期后去同一个地方获取正确的数据)。所以排除是guava引起的。<br>最后经过排查是因为在 spring管理的 bean内使用了全局变量，并且更改了全局变量导致的。<br>简易代码如下，大致就是这个意思 :<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> List&lt;OwMenuDO&gt; EMPTY_LIST = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TEST_USER_ID = <span class="string">"1287178"</span>;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MenuService menuService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;OwMenuDO&gt; <span class="title">foo</span><span class="params">(Long userId)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 服务处理</span></span><br><span class="line">        OpenWorkbenchResult&lt;List&lt;OwMenuDO&gt;&gt; result = menuService.queryMenusByQuery(<span class="keyword">new</span> MenuQuery());</span><br><span class="line">        <span class="keyword">if</span> (result == <span class="keyword">null</span> || !result.isSuccess()) &#123;</span><br><span class="line">            <span class="comment">// @todo 关键错误点1  同事用了 contains去判断，这里判断用户相等 必须使用equals，不可以使用contains。原因很简单。</span></span><br><span class="line">            <span class="keyword">if</span> (userId.toString().contains(TEST_USER_ID)) &#123;</span><br><span class="line">                <span class="comment">// todo 关键错误点2，有同学在这里处理了测试逻辑。</span></span><br><span class="line">                EMPTY_LIST.add(<span class="keyword">new</span> OwMenuDO());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> EMPTY_LIST;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result.getModule();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>这段代码里的错误很明显，大家一眼都能看出来，但是业务逻辑那么长，很难一步定位，这里推荐一个工具 <a href="https://github.com/alibaba/arthas" target="_blank" rel="noopener">arthas</a>，可以方便去定位问题。<br>同时这段代码我们修改后，的总结 1、对于通用返回的 emptyList需要使用不可变的list去代替，比如 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``` Collections.unmodifiableList(new ArrayList&lt;&gt;());</span><br></pre></td></tr></table></figure></p>
+<p>等。</p>
 
           
         
@@ -1597,7 +1456,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
